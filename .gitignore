@@ -20,3 +20,5 @@ vignettes/*.pdf
 
 # User chats
 chats/*
+
+.DS_store
