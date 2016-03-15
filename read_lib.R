@@ -9,7 +9,7 @@ library(dplyr)
 ## Date of the message uses POSIXlt
 get_messages <- function(filename) {
 
-	lines <- tolower(readLines(input_file, warn=FALSE))
+	lines <- tolower(readLines(filename, warn=FALSE))
 	# Remove empty entries
 	lines <- lines[which(lines != '' & !is.na(lines))]
 	entry_regex <- '([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} .+'
@@ -34,7 +34,7 @@ get_messages <- function(filename) {
 	temp_messages <- lines[grep(messages_regex, lines)]
 
 	date_regex <- '([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} '
-	user_regex <- '.+[:]'
+	user_regex <- '^[^:]+[:]'
 	msg_regex  <- '.+'
 
 	dates <- regmatches(temp_messages, regexpr(date_regex, temp_messages)) 
