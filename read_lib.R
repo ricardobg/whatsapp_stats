@@ -34,14 +34,15 @@ get_messages <- function(filename) {
 	temp_messages <- lines[grep(messages_regex, lines)]
 
 	date_regex <- '([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} '
-	user_regex <- '^[^:]+[:]'
+	user_regex <- '^[^:]+[:] '
 	msg_regex  <- '.+'
 
 	dates <- regmatches(temp_messages, regexpr(date_regex, temp_messages)) 
 	temp_messages <- sub(date_regex, '', temp_messages)
-	users <- sub(":", "", regmatches(temp_messages, regexpr(user_regex, temp_messages)))
+	users <- sub(": ", "", regmatches(temp_messages, regexpr(user_regex, temp_messages)), fixed=TRUE)
 	msgs <- sub(user_regex, '', temp_messages)
 
-	res <- data.frame(DATE=as.POSIXlt(dates, "%d/%m/%y %H:%M:%S: "), USER=users, MESSAGE=msgs)
+	res <- data.frame(DATE=as.POSIXlt(dates, "%d/%m/%y %H:%M:%S: "), USER=users, MESSAGE=msgs, MESSAGE_LENGTH=sapply(msgs, 
+	               function(m) { if (m == '<\U200Eimage omitted>') 0 else nchar(m) }))
 	tbl_df(res)
 }
