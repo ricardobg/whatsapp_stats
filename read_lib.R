@@ -49,6 +49,10 @@ get_messages <- function(filename,model) {
 	temp_messages <- lines[grep(messages_regex, lines)]
 	
 	
+	
+	
+	
+	
 	if(model=="IOS"){
 	date_regex <- '([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} '
 	user_regex <- '^[^:]+[:] '
@@ -59,6 +63,12 @@ get_messages <- function(filename,model) {
 	  msg_regex  <- '.+'
 	}
 	
+	##Remove entries with events (such as create group) instead of messages
+	##TODO: Create list of events BROCOLLESSSSSSS
+	temp_messages <- temp_messages[grep(user_regex,temp_messages)]
+
+	
+	
 	if(model=="IOS"){
 	dates <- regmatches(temp_messages, regexpr(date_regex, temp_messages)) 
 	temp_messages <- sub(date_regex, '', temp_messages)
@@ -68,8 +78,11 @@ get_messages <- function(filename,model) {
 	}else if(model=="ANDROID"){
 	  dates <- regmatches(temp_messages, regexpr(date_regex, temp_messages)) 
 	  temp_messages <- sub(date_regex, '', temp_messages)
+	  
 	  users <- sub(": ", "", regmatches(temp_messages, regexpr(user_regex, temp_messages)), fixed=TRUE)
+	 
 	  users <- sub(" - ","",users)
+	 
 	  msgs <- sub(user_regex, '', temp_messages)
 	  
 	}
@@ -80,7 +93,7 @@ get_messages <- function(filename,model) {
 	               function(m) { if (m == '<\U200Eimage omitted>') 0 else nchar(m) }))
 	
 	} else if (model== "ANDROID" ){
-	  res <- data.frame(DATE=as.POSIXct(dates, "%m/%d/%y, %H:%M"), USER=users, MESSAGE=msgs, MESSAGE_LENGTH=sapply(msgs, 
+	  res <- data.frame(DATE=as.POSIXct(dates, "%m/%d/%y, %H:%M",tz=Sys.timezone()), USER=users, MESSAGE=msgs, MESSAGE_LENGTH=sapply(msgs, 
 	                                                                                                              function(m) { if (m == '<\U200Eimage omitted>') 0 else nchar(m) }))
 	}
 	
