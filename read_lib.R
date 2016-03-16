@@ -55,15 +55,35 @@ get_messages <- function(filename,model) {
 	msg_regex  <- '.+'
 	}else if (model=="ANDROID"){
 	  date_regex <- "([0-9][0-9]?[/])([0-9][0-9]?[/])[0-9]{2}[,] ([0-9]{2}[:][0-9]{2})"
-	  user_regex <- '^[^-]+[:] '
+	  user_regex <- ' [-].+[:] '
 	  msg_regex  <- '.+'
-  }
+	}
+	
+	if(model=="IOS"){
 	dates <- regmatches(temp_messages, regexpr(date_regex, temp_messages)) 
 	temp_messages <- sub(date_regex, '', temp_messages)
 	users <- sub(": ", "", regmatches(temp_messages, regexpr(user_regex, temp_messages)), fixed=TRUE)
 	msgs <- sub(user_regex, '', temp_messages)
 
-	res <- data.frame( USER=users, MESSAGE=msgs, MESSAGE_LENGTH=sapply(msgs, 
+	}else if(model=="ANDROID"){
+	  dates <- regmatches(temp_messages, regexpr(date_regex, temp_messages)) 
+	  temp_messages <- sub(date_regex, '', temp_messages)
+	  users <- sub(": ", "", regmatches(temp_messages, regexpr(user_regex, temp_messages)), fixed=TRUE)
+	  users <- sub(" - ","",users)
+	  msgs <- sub(user_regex, '', temp_messages)
+	  
+	}
+	
+	if(model=="IOS"){
+	
+	res <- data.frame(DATE=as.POSIXct(dates, "%d/%m/%y %H:%M:%S ",tz=Sys.timezone()), USER=users, MESSAGE=msgs, MESSAGE_LENGTH=sapply(msgs, 
 	               function(m) { if (m == '<\U200Eimage omitted>') 0 else nchar(m) }))
+	
+	} else if (model== "ANDROID" ){
+	  res <- data.frame(DATE=as.POSIXct(dates, "%m/%d/%y, %H:%M"), USER=users, MESSAGE=msgs, MESSAGE_LENGTH=sapply(msgs, 
+	                                                                                                              function(m) { if (m == '<\U200Eimage omitted>') 0 else nchar(m) }))
+	}
+	
+	
 	tbl_df(res)
 }
