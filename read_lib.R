@@ -56,16 +56,20 @@ get_messages <- function(filename,model) {
 	if(model=="IOS"){
 	date_regex <- '([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} '
 	user_regex <- '^[^:]+[:] '
+	user_regex2 <- '[^:]+[:] '
 	msg_regex  <- '.+'
 	}else if (model=="ANDROID"){
 	  date_regex <- "([0-9][0-9]?[/])([0-9][0-9]?[/])[0-9]{2}[,] ([0-9]{2}[:][0-9]{2})"
-	  user_regex <- ' [-].+[:] '
+	  user_regex <- '^[^-].+[:] '
+	  user_regex<-'^ [-] ([a-z][ ]?)+[:]'
+	  user_regex2<-' [-] ([a-z][ ]?)+[:]'
 	  msg_regex  <- '.+'
 	}
 	
 	##Remove entries with events (such as create group) instead of messages
 	##TODO: Create list of events BROCOLLESSSSSSS
-	temp_messages <- temp_messages[grep(user_regex,temp_messages)]
+	##user_regex2 eh a regex do user sem determinar o comeco de string
+	temp_messages <- temp_messages[grep(user_regex2,temp_messages)]
 
 	
 	
