@@ -28,6 +28,7 @@ get_messages <- function(filename,model) {
 	index_last <- -1
 	# Destination
 	dest_last <- 0
+	if(length(messages_without_time)!=0 ){
 	for (i in messages_without_time) {
 		if (index_last != i - 1) {
 			dest_last <- i - 1
@@ -36,7 +37,7 @@ get_messages <- function(filename,model) {
 		index_last <- i
 	}
 	lines <- lines[-messages_without_time]
-
+}
 	#Now we have all lines with date
 	
 	if(model=="IOS"){
