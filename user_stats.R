@@ -1,25 +1,25 @@
-
-# TODO: list files in chats/* and ask user which files to analyse (or all)
-
-# Read file(s)
-input_file <- "chats/group_assin.txt"
-cat(sprintf("Reading file %s ...\n", input_file))
-lines <- readLines(input_file, warn=FALSE)
-
-# Remove empty entries
-lines <- lines[which(lines != '' & !is.na(lines))]
-cat(sprintf("%d messages read! \n", length(lines)))
-
-# Treat messages
-message_regex <- '([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} .*(: .*)?'
-messages_without_time <- grep(message_regex, lines, ignore.case=TRUE, invert=TRUE)
-
-paste(lin[grep(, lin, ignore.case=TRUE, invert=TRUE) - 1], lin[grep('([0-9]{2}[/]){2}[0-9]{2} ([0-9]{2}[:]){3} .*: .*', lin, ignore.case=TRUE, invert=TRUE)])
-
-# Messages per user
-
-# Words per user
-
-# Characters per user
+library(dplyr)
 
 # Custom statistics 
+users.count_ocurrencies <- function (messages, regex) {
+  ocurrencies <- sapply(gregexpr(regex, messages$MESSAGE), function (el) { if (el[1] == -1) 0 else length(el) })
+  temp <- tbl_df(data.frame(USER=messages$USER,COUNT=ocurrencies))
+  summarize(group_by(temp, USER), COUNT=sum(COUNT))
+}
+
+
+# Messages per user
+users.count_messages <- function (messages) {
+  count(messages, USER)
+}
+
+# Words per user
+users.count_words <- function (messages) {
+  
+}
+
+# Characters per user
+users.count_characters <- function (messages, letters.only = TRUE) {
+  
+}
+
