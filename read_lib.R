@@ -28,7 +28,7 @@ load_messages <- function(filename, model = 'automatic') {
 	if (model == 'automatic') {
 	  for (m in row.names(config)) {
 	    test_regex <- paste(config[m, 'date_regex'], config[m, 'date_message_separator'], ' .+$', sep = '')
-	    test_messages <- grep(test_regex, lines)
+	    test_messages <- grep(test_regex, lines[1])
 	    # if this is the one, breaks
 	    if (length(test_messages) > 0) {
 	      model <- m
@@ -36,6 +36,9 @@ load_messages <- function(filename, model = 'automatic') {
 	    }
 	  }
 	}
+	
+	##((?:(?:[^[:punct:][:space:]])|(?:[\-]))+)\W* 
+	##Para brocoli
 	
 	# Make regex to recognize a line
 	entry_regex <- paste(config[model, 'date_regex'], config[model, 'date_message_separator'], ' .+$', sep = '')
