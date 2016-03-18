@@ -36,9 +36,7 @@ load_messages <- function(filename, model = 'automatic') {
 	    }
 	  }
 	}
-	
-	##((?:(?:[^[:punct:][:space:]])|(?:[\-]))+)\W* 
-	##Para brocoli
+
 	
 	# Make regex to recognize a line
 	entry_regex <- paste(config[model, 'date_regex'], config[model, 'date_message_separator'], ' .+$', sep = '')
