@@ -9,17 +9,27 @@ lear.predict <- function (learn_structure, message) {
 }
 
 
-costFunction <- function(theta,X,y ){
+costFunction <- function(theta,X,y,lambda ){
   
   
   resultados <- sigmoid(X%*%theta);
-  m <- size(y)[1]
+  m <- size(y)[1];
   
   
   J <- (1/m) *  (-y*log(resultados)-(1.-y)*log(1.-resultados));
   
   return (sum(J))##retornar custo
   
+}
+
+grad <- function(theta, X, y, lambda){ ##nao sei ainda se funciona!
+  resultados <- sigmoid(X%*%theta);
+  m <- size(y)[1]
+ 
+  
+  grad <- (1/m) *  t(X)%*%(resultados-y);
+  
+  return (grad)
 }
 
 
